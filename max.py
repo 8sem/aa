@@ -1,11 +1,19 @@
 import time
 
-start = time.time()
+n = int(input("Enter number of nodes: "))
+m = int(input("Enter number of edges: "))
 
-n = 4
-g = [[0]*n for _ in range(n)]
-for u, v, c in [(0,1,3),(0,2,2),(1,3,2),(1,2,5),(2,3,3)]:
-    g[u][v] = c
+g = [[0] * n for _ in range(n)]
+
+print("Enter each edge as: from_node to_node capacity")
+for _ in range(m):
+    u, v, c = map(int, input().split())
+    g[u][v] = c  
+
+s = int(input("Enter source node: "))
+t = int(input("Enter sink node: "))
+
+start = time.time()
 
 def dfs(u, t, flow, visited):
     if u == t:
@@ -24,13 +32,14 @@ def dfs(u, t, flow, visited):
 def ford_fulkerson(s, t):
     flow = 0
     while True:
-        visited = [False]*n
+        visited = [False] * n
         increment = dfs(s, t, float('inf'), visited)
         if increment == 0:
             break
+        print(f"Path found → Flow added: {increment}")
         flow += increment
     return flow
 
-print("Max Flow:", ford_fulkerson(0, 3))
-print("Time: %.6f seconds" % (time.time() - start))
-
+max_flow = ford_fulkerson(s, t)
+print("Max Flow:", max_flow)
+print("Execution Time: %.6f seconds" % (time.time() - start))
