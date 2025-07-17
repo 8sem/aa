@@ -1,5 +1,5 @@
 import heapq
-import time  # Import the time module
+import time
 
 def dijkstra(graph, start):
     dist = {node: float('inf') for node in graph}
@@ -20,24 +20,47 @@ def dijkstra(graph, start):
     
     return dist
 
-graph = {
-    '0': [('1', 4), ('2', 8)],
-    '1': [('4', 6), ('0', 4)],
-    '2': [('3', 2), ('0', 8)],
-    '3': [('4', 10), ('2', 2)],
-    '4': [('1', 6), ('3', 10)]
-}
+# Get input from user
+graph = {}
+nodes = set()
 
-# Start timing
+# Input number of edges
+E = int(input("Enter number of edges: "))
+print("Enter edges in the format: node1 node2 weight")
+
+for _ in range(E):
+    u, v, w = input().split()
+    w = int(w)
+    
+    # Add nodes to set
+    nodes.add(u)
+    nodes.add(v)
+
+    # Add edge to graph
+    if u not in graph:
+        graph[u] = []
+    if v not in graph:
+        graph[v] = []
+
+    graph[u].append((v, w))
+    graph[v].append((u, w))  # For undirected graph
+
+# Ensure all nodes have at least empty adjacency list
+for node in nodes:
+    if node not in graph:
+        graph[node] = []
+
+# Input the start node
+start_node = input("Enter the start node: ")
+
+# Run the algorithm and measure time
 start_time = time.time()
-
-# Run Dijkstra's algorithm
-result = dijkstra(graph, '0')
-print(result)
-
-# End timing
+result = dijkstra(graph, start_node)
 end_time = time.time()
 
-# Print execution time
-print(f"Execution time: {end_time - start_time:.6f} seconds")
+# Output the result
+print("\nShortest distances from start node:")
+for node in sorted(result):
+    print(f"Node {node} : {result[node]}")
 
+print(f"\nExecution time: {end_time - start_time:.6f} seconds")
